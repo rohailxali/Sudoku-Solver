@@ -202,38 +202,33 @@ class SudokuGUI:
                              bg=self.BG_COLOR, fg=self.ACCENT_COLOR)
         grid_title.pack(pady=5)
         
-        # Create grid with visual separation for 3x3 boxes
-        self.grid_frame = tk.Frame(grid_frame, bg="#333333", padx=3, pady=3)
+        # Create inner container for the grid
+        container = tk.Frame(grid_frame, bg="#000000", bd=2, relief=tk.SOLID)
+        container.pack(padx=5, pady=5)
+        
+        # Create grid with clean cell borders
+        self.grid_frame = tk.Frame(container, bg="#000000")
         self.grid_frame.pack()
         
         for row in range(9):
             for col in range(9):
-                # Determine cell colors based on 3x3 box
+                # Alternate cell background colors
                 if (row // 3 + col // 3) % 2 == 0:
                     cell_bg = "#ffffff"
                 else:
-                    cell_bg = "#f5f5f5"
+                    cell_bg = "#f0f0f0"
+                
+                # Apply thicker borders at 3x3 box boundaries
+                border_width = 2 if (row % 3 == 0 or row % 3 == 2 or 
+                                   col % 3 == 0 or col % 3 == 2) else 1
                 
                 cell = tk.Label(self.grid_frame, width=4, height=2,
                               font=("Helvetica", 14, "bold"),
-                              bg=cell_bg, fg="#000000",
-                              relief=tk.FLAT, borderwidth=0)
-                cell.grid(row=row, column=col, padx=0, pady=0)
+                              bg=cell_bg, fg="#0066cc",
+                              relief=tk.SOLID, 
+                              borderwidth=border_width)
+                cell.grid(row=row, column=col, padx=0, pady=0, sticky="nsew")
                 self.cells[(row, col)] = cell
-        
-        # Add visual borders for 3x3 boxes
-        self._add_grid_borders()
-        
-    def _add_grid_borders(self):
-        """Add visual borders to 3x3 boxes"""
-        for i in range(1, 3):
-            # Horizontal lines (thicker borders between 3x3 boxes)
-            line = tk.Frame(self.grid_frame, height=3, bg="#333333")
-            line.grid(row=i*3-1, column=0, columnspan=9, sticky="ew", pady=1)
-            
-            # Vertical lines (thicker borders between 3x3 boxes)
-            line = tk.Frame(self.grid_frame, width=3, bg="#333333")
-            line.grid(row=0, column=i*3-1, rowspan=9, sticky="ns", padx=1)
     
     def _create_control_panel(self, parent):
         """Create the control and statistics panel"""
